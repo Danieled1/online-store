@@ -1,15 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ChakraProvider } from "@chakra-ui/react";
+import theme from "../theme.jsx";
+import { ResponsiveProvider } from "./contexts/ResponsiveContext.jsx";
+import { HelmetProvider } from "react-helmet-async";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    {/* <AuthProvider> */}
-    <ChakraProvider>
-      <App />
+  <HelmetProvider>
+    <ChakraProvider theme={theme}>
+      <ResponsiveProvider>
+        <App />
+      </ResponsiveProvider>
     </ChakraProvider>
-    {/* </AuthProvider> */}
-  </React.StrictMode>
+  </HelmetProvider>
 );
