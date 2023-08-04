@@ -1,5 +1,6 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import NavigationMenu from "../partials/NavigationMenu";
+import { Link } from "react-router-dom";
 
 const Header = ({ isMobile }) => {
   return (
@@ -18,6 +19,8 @@ const Header = ({ isMobile }) => {
         fontFamily="'Pacifico', cursive"
         whiteSpace="nowrap"
         marginBottom={2}
+        as={Link}
+        to={"/"}
       >
         Company Name
       </Heading>

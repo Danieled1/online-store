@@ -21,7 +21,7 @@ import {
 
 const navigationItems = [
   { icon: FaHome, label: "Home", to: "/" },
-  { icon: FaTags, label: "Catalog", to: "/catalog" },
+  { icon: FaTags, label: "Shop", to: "/shop" },
   { icon: FaBlog, label: "Blog", to: "/blog" },
   { icon: FaInfoCircle, label: "About", to: "/about" },
   { icon: FaHeadset, label: "Support", to: "/support" },

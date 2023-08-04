@@ -20,6 +20,7 @@ import { Helmet } from "react-helmet-async";
 import Slider from "react-slick";
 import Layout from "../layouts/Layout";
 import { useResponsiveContext } from "../../contexts/ResponsiveContext";
+import { Link } from "react-router-dom";
 
 const productData = [
   {
@@ -298,6 +299,8 @@ const LandingPage = () => {
                 size="lg"
                 mt={5}
                 _hover={{ transform: "scale(1.02)" }}
+                as={Link}
+                to={'/about'}
               >
                 Learn More
               </Button>
