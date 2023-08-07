@@ -15,123 +15,77 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { PhoneIcon, EmailIcon } from "@chakra-ui/icons";
+import { PhoneIcon, EmailIcon, StarIcon } from "@chakra-ui/icons";
 import { Helmet } from "react-helmet-async";
 import Slider from "react-slick";
 import Layout from "../layouts/Layout";
 import { useResponsiveContext } from "../../contexts/ResponsiveContext";
 import { Link } from "react-router-dom";
 
-const productData = [
-  {
-    title: "Product 1",
-    description: "Description for Product 1",
-    image: "https://fakeimg.pl/350x200/ff9100/000",
-  },
-  {
-    title: "Product 2",
-    description: "Description for Product 2",
-    image: "https://fakeimg.pl/350x200/ff8900/000",
-  },
-  {
-    title: "Product 3",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff7800/000",
-  },
-  {
-    title: "Product 4",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff6700/000",
-  },
-  {
-    title: "Product 5",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff5600/000",
-  },
-  {
-    title: "Product 6",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff4500/000",
-  },
-  {
-    title: "Product 7",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff3400/000",
-  },
-  {
-    title: "Product 8",
-    description: "Description for Product 3",
-    image: "https://fakeimg.pl/350x200/ff1200/000",
-  },
-  // more products...
-];
-const posts = [
-  {
-    title: "Blog Post 1",
-    image: "https://fakeimg.pl/350x200/ddd100/000",
-    description: "A brief intro about Blog Post 1",
-    postStart:
-      "This is the beginning of the blog post. It will continue until it maximizes the space on the right side of the card...",
-  },
-  {
-    title: "Blog Post 2",
-    image: "https://fakeimg.pl/350x200/ddd112/000",
-    description: "A brief intro about Blog Post 2",
-    postStart:
-      "This is the start of another engaging blog post. The text will continue to fill the space on the right...",
-  },
-  {
-    title: "Blog Post 3",
-    image: "https://fakeimg.pl/350x200/ddd123/000",
-    description: "A brief intro about Blog Post 3",
-    postStart:
-      "This is the start of another engaging blog post. The text will continue to fill the space on the right...",
-  },
-  {
-    title: "Blog Post 4",
-    image: "https://fakeimg.pl/350x200/ddd134/000",
-    description: "A brief intro about Blog Post 4",
-    postStart:
-      "This is the start of another engaging blog post. The text will continue to fill the space on the right...",
-  },
-  {
-    title: "Blog Post 5",
-    image: "https://fakeimg.pl/350x200/ddd145/000",
-    description: "A brief intro about Blog Post 5",
-    postStart:
-      "This is the start of another engaging blog post. The text will continue to fill the space on the right...",
-  },
-];
 
-// ItemCard Component - BUG : When there are less then the slides to show it will duplicate it
+// ItemCard Component - BUG : When there are less then the slides to show it will duplicate it     
 const ItemCard = ({
+  id,
+  name,
   image,
-  title,
+  price,
+  rating,
   description,
-  postStart,
   isProduct = true,
 }) => (
   <Box
     width={{ base: "75vw", sm: "40vw", md: "20vw" }} // Adjusted width for responsiveness
     borderWidth="1px"
     borderRadius="lg"
+    p={2}
+    m={4}
     overflow="hidden"
     _hover={{ transform: "scale(1.01)" }}
   >
-    <Image src={image} alt={title} width="100%" />
-    <Box p="6">
-      <Box d="flex" alignItems="baseline">
-        <Text>{title}</Text>
-      </Box>
+    <Box height="200px" position="relative">
+      <Image src={image} alt={name} width="100%" height="100%" objectFit="cover" borderRadius="md" />
+    </Box>
+
+    <Box p="4" display="flex" flexDirection="column" justifyContent="space-between" height="100%">
       <Box>
-        <Text fontSize="sm" isTruncated>
+        <Text fontSize="lg" fontWeight="semibold" mb={1} isTruncated>
+          {name}
+        </Text>
+        <Text fontSize="md" color="gray.600" noOfLines={2} mb={2}>
           {description}
         </Text>
-        <Text mt={2}>{postStart}</Text>
       </Box>
+      
+      {isProduct && (
+        <Box>
+          <Text fontSize="lg" fontWeight="semibold">
+            {price} $
+          </Text>
+          <HStack alignItems="center">
+            <Text fontSize="sm" color="gray.500">
+              Rating:
+            </Text>
+            <Box as="span" color="yellow.500">
+              {Array.from({ length: rating }).map((_, index) => (
+                <StarIcon key={index} />
+              ))}
+            </Box>
+          </HStack>
+        </Box>
+      )}
+      
+      {!isProduct && (
+        <Button colorScheme="blue" size="sm">
+          Read More
+        </Button>
+      )}
     </Box>
   </Box>
 );
+
+
+
+
 
 // ItemSlider Component
 const ItemSlider = ({ data, isProduct = true }) => {
@@ -184,7 +138,7 @@ const ItemSlider = ({ data, isProduct = true }) => {
   );
 };
 
-const LandingPage = () => {
+const LandingPage = ({posts,products}) => {
   const buttonHoverBg = useColorModeValue("blue.600", "blue.300");
   const { isMobile } = useResponsiveContext();
   return (
@@ -261,12 +215,14 @@ const LandingPage = () => {
             Check out our selection of top quality products tailored to your
             needs.
           </Text>
-          <ItemSlider data={productData} />
+          <ItemSlider data={products} />
           <Button
             colorScheme="blue"
             size="lg"
             mt={5}
             _hover={{ transform: "scale(1.02)" }}
+            as={Link}
+            to={"/shop"}
           >
             Go To Store
           </Button>
