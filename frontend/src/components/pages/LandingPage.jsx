@@ -22,8 +22,7 @@ import Layout from "../layouts/Layout";
 import { useResponsiveContext } from "../../contexts/ResponsiveContext";
 import { Link } from "react-router-dom";
 
-
-// ItemCard Component - BUG : When there are less then the slides to show it will duplicate it     
+// ItemCard Component - BUG : When there are less then the slides to show it will duplicate it
 const ItemCard = ({
   id,
   name,
@@ -43,10 +42,23 @@ const ItemCard = ({
     _hover={{ transform: "scale(1.01)" }}
   >
     <Box height="200px" position="relative">
-      <Image src={image} alt={name} width="100%" height="100%" objectFit="cover" borderRadius="md" />
+      <Image
+        src={image}
+        alt={name}
+        width="100%"
+        height="100%"
+        objectFit="cover"
+        borderRadius="md"
+      />
     </Box>
 
-    <Box p="4" display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+    <Box
+      p="4"
+      display="flex"
+      flexDirection="column"
+      justifyContent="space-between"
+      height="100%"
+    >
       <Box>
         <Text fontSize="lg" fontWeight="semibold" mb={1} isTruncated>
           {name}
@@ -55,7 +67,7 @@ const ItemCard = ({
           {description}
         </Text>
       </Box>
-      
+
       {isProduct && (
         <Box>
           <Text fontSize="lg" fontWeight="semibold">
@@ -65,15 +77,15 @@ const ItemCard = ({
             <Text fontSize="sm" color="gray.500">
               Rating:
             </Text>
-            <Box as="span" color="yellow.500">
+            <Box as="span" color="yellow.500" >
               {Array.from({ length: rating }).map((_, index) => (
-                <StarIcon key={index} />
+                <StarIcon key={index} boxSize={3.5} />
               ))}
             </Box>
           </HStack>
         </Box>
       )}
-      
+
       {!isProduct && (
         <Button colorScheme="blue" size="sm">
           Read More
@@ -82,10 +94,6 @@ const ItemCard = ({
     </Box>
   </Box>
 );
-
-
-
-
 
 // ItemSlider Component
 const ItemSlider = ({ data, isProduct = true }) => {
@@ -138,7 +146,7 @@ const ItemSlider = ({ data, isProduct = true }) => {
   );
 };
 
-const LandingPage = ({posts,products}) => {
+const LandingPage = ({ posts, products }) => {
   const buttonHoverBg = useColorModeValue("blue.600", "blue.300");
   const { isMobile } = useResponsiveContext();
   return (
@@ -256,7 +264,7 @@ const LandingPage = ({posts,products}) => {
                 mt={5}
                 _hover={{ transform: "scale(1.02)" }}
                 as={Link}
-                to={'/about'}
+                to={"/about"}
               >
                 Learn More
               </Button>
