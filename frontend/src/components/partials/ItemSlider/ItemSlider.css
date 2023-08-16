@@ -1,0 +1,15 @@
+.slick-slider {
+  height: 470px;
+}
+
+.slick-track {
+  height: 450px;
+  margin-top: 16px;
+}
+/* Individual slides */
+.slick-slide {
+  height: 100%;
+}
+.slick-dots {
+  margin: 16px 0;
+}

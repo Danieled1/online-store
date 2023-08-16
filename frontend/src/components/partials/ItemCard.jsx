@@ -1,8 +1,18 @@
 import { StarIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, HStack, Image, Text } from "@chakra-ui/react";
-import React from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ModalQuickView from "../common/ModalQuickView";
+
 const MotionBox = motion(Box);
 
 const handleAddToCart = (product) => {
@@ -18,129 +28,94 @@ const handleAddToCart = (product) => {
   //   isClosable: true,
   // });
 };
-const ItemCard = ({
-  id,
-  name,
-  image,
-  price,
-  rating,
-  description,
-  title,
-  postStart,
-  isProduct = true,
-  setSelectedProduct,
-  product,
-  onOpen
-}) => {
+const ItemCard = ({ item, isProduct = true }) => {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { id, name, image, price, rating, description, title, postStart } =
+    item;
   return (
     <MotionBox
       key={id}
-      bg='white'
-      rounded='lg'
-      overflow='hidden'
-      boxShadow='lg'
-      opacity={0.8}
+      bg="white"
+      rounded="lg"
+      overflow="hidden"
+      boxShadow="lg"
       marginX={4}
-      whileHover={{ scale: 1.08, opacity: 1 }}
+      whileHover={{ scale: 1.08 }}
       transition={{ duration: 0.3 }}
+      width="280px" // Adjusted width for App Store style cards
+      height="400px" // Adjusted height for App Store style cards
     >
-      <Image src={image} alt={name} />
-      <Box p={6}>
-        {isProduct && (
-          <Box>
-            <Text fontWeight='bold' fontSize='lg' mt={2} isTruncated>
+      <Image
+        src={image}
+        alt={name}
+        height="180px"
+        objectFit="cover"
+        width="100%"
+      />
+      <Box p={4} flex={1}>
+        {isProduct ? (
+          <>
+            <Text fontWeight="bold" fontSize="xl" mt={2} isTruncated>
               {name}
             </Text>
-            <Text fontSize='sm' color='gray.500' mt={2} noOfLines={2}>
+            <Text fontSize="sm" color="gray.500" mt={2} noOfLines={2}>
               {description}
             </Text>
-            <Text fontSize='lg' fontWeight='semibold' mt={2}>
+            <Text fontSize="lg" fontWeight="semibold" mt={2}>
               {price} $
             </Text>
-            <HStack alignItems='center'>
-              <Text fontSize='sm' color='gray.500' mt={2}>
+            <HStack alignItems="center" mt={2}>
+              <Text fontSize="sm" color="gray.500">
                 Rating:
               </Text>
-              <Box as='span' color='yellow.500'>
+              <Box as="span" color="yellow.500">
                 {Array.from({ length: rating }).map((_, index) => (
-                  <StarIcon key={index} boxSize={3.5} />
+                  <StarIcon key={index} boxSize={4} />
                 ))}
               </Box>
             </HStack>
-
-            <Flex
-              width='full'
-              height='50px'
-              borderRadius='md'
-              overflow='hidden'
-              boxShadow='sm'
-              mt='4'
-              position='relative'
-              _hover={{ boxShadow: "xl" }}
-            >
-              <Box
-                flex='1'
-                display='flex'
-                alignItems='center'
-                justifyContent='center'
-                bg='teal'
-                color='white'
-                fontWeight='bold'
-                _hover={{
-                  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-                  bg: "white",
-                  color: "teal.500",
-                }}
+            <Flex mt={2} justifyContent="space-between">
+              <Button
+                size="sm"
+                colorScheme="teal"
                 onClick={() => handleAddToCart(product)}
-                transition='all 0.4s'
+                width="48%"
               >
                 Add to Cart
-              </Box>
-
-              <Box
-                flex='1'
-                display='flex'
-                alignItems='center'
-                justifyContent='center'
-                bg='gray.300'
-                color='white'
-                fontWeight='bold'
-                _hover={{
-                  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-                  bg: "white",
-                  color: "gray.700",
-                }}
+              </Button>
+              <Button
+                size="sm"
+                colorScheme="gray"
                 onClick={() => {
-                  setSelectedProduct(product);
+                  setSelectedProduct(item);
                   onOpen();
                 }}
-                transition='all ease 0.4s'
+                width="48%"
               >
                 Quick View
-              </Box>
+              </Button>
             </Flex>
-          </Box>
-        )}
-
-        {!isProduct && (
-          <Box
-            height={"100px"}
-            display={"flex"}
-            justifyContent={"space-between"}
-            flexDir={"column"}
-          >
-            <Text fontWeight='bold' fontSize='lg' isTruncated mt={-4}>
+          </>
+        ) : (
+          <>
+            <Text fontWeight="bold" fontSize="xl" isTruncated mt={-4}>
               {title}
             </Text>
-            <Text fontSize='sm' color='gray.500'  noOfLines={4} py={2}>
+            <Text fontSize="sm" color="gray.500" noOfLines={4} py={2}>
               {postStart}
             </Text>
-            <Button as={Link} colorScheme='blue' size='sm' >
-              Read More
-            </Button>
-          </Box>
+            <Link to={`/post/${id}`}>Read More</Link>
+          </>
         )}
       </Box>
+      {/* Quick View Modal */}
+      <ModalQuickView
+        selectedProduct={selectedProduct}
+        handleAddToCart={handleAddToCart}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </MotionBox>
   );
 };

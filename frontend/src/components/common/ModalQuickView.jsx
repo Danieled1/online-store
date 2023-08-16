@@ -24,25 +24,23 @@ function ModalQuickView({ selectedProduct, handleAddToCart, isOpen, onClose }) {
         <ModalCloseButton />
         <ModalBody>
           <Image src={selectedProduct?.image} alt={selectedProduct?.name} />
-          <Text fontWeight='bold' fontSize='lg'>
+          <Text fontWeight="bold" fontSize="lg">
             {selectedProduct?.name}
           </Text>
           <Text>${selectedProduct?.price}</Text>
-          <Box d='flex' mt='2'>
+          <Divider my={2}/>
+          <Box d="flex" mt="2" color="yellow.500">
             {Array(5)
               .fill("")
               .map((_, i) => (
-                <StarIcon
-                  key={i}
-                  color={i < selectedProduct?.rating ? "teal.500" : "gray.300"}
-                />
+                <StarIcon key={i} boxSize={4} />
               ))}
           </Box>
-          <Divider />
-          <Text mt='4'>{selectedProduct?.description}</Text>
+          <Divider my={2}/>
+          <Text mt="2">{selectedProduct?.description}</Text>
           <Button
-            mt='2'
-            colorScheme='teal'
+            mt="2"
+            colorScheme="teal"
             onClick={() => handleAddToCart(selectedProduct)}
           >
             Add to Cart
