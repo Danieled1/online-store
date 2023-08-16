@@ -10,141 +10,19 @@ import {
   IconButton,
   useColorModeValue,
   SimpleGrid,
-  Image,
   Input,
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
 import { PhoneIcon, EmailIcon, StarIcon } from "@chakra-ui/icons";
 import { Helmet } from "react-helmet-async";
-import Slider from "react-slick";
+
 import Layout from "../layouts/Layout";
 import { useResponsiveContext } from "../../contexts/ResponsiveContext";
 import { Link } from "react-router-dom";
+import ItemSlider from "../partials/ItemSlider";
 
-// ItemCard Component - BUG : When there are less then the slides to show it will duplicate it
-const ItemCard = ({
-  id,
-  name,
-  image,
-  price,
-  rating,
-  description,
-  isProduct = true,
-}) => (
-  <Box
-    width={{ base: "75vw", sm: "40vw", md: "20vw" }} // Adjusted width for responsiveness
-    borderWidth="1px"
-    borderRadius="lg"
-    p={2}
-    m={4}
-    overflow="hidden"
-    _hover={{ transform: "scale(1.01)" }}
-  >
-    <Box height="200px" position="relative">
-      <Image
-        src={image}
-        alt={name}
-        width="100%"
-        height="100%"
-        objectFit="cover"
-        borderRadius="md"
-      />
-    </Box>
 
-    <Box
-      p="4"
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
-      height="100%"
-    >
-      <Box>
-        <Text fontSize="lg" fontWeight="semibold" mb={1} isTruncated>
-          {name}
-        </Text>
-        <Text fontSize="md" color="gray.600" noOfLines={2} mb={2}>
-          {description}
-        </Text>
-      </Box>
-
-      {isProduct && (
-        <Box>
-          <Text fontSize="lg" fontWeight="semibold">
-            {price} $
-          </Text>
-          <HStack alignItems="center">
-            <Text fontSize="sm" color="gray.500">
-              Rating:
-            </Text>
-            <Box as="span" color="yellow.500" >
-              {Array.from({ length: rating }).map((_, index) => (
-                <StarIcon key={index} boxSize={3.5} />
-              ))}
-            </Box>
-          </HStack>
-        </Box>
-      )}
-
-      {!isProduct && (
-        <Button colorScheme="blue" size="sm">
-          Read More
-        </Button>
-      )}
-    </Box>
-  </Box>
-);
-
-// ItemSlider Component
-const ItemSlider = ({ data, isProduct = true }) => {
-  const slidesToShow = Math.min(4, data.length);
-  const slidesToScroll = Math.min(4, data.length);
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: slidesToShow,
-    swipe: true,
-    slidesToScroll: slidesToScroll,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          dots: true,
-        },
-      },
-    ],
-  };
-
-  return (
-    <Slider {...settings}>
-      {data.map((item, index) => (
-        <ItemCard key={index} {...item} isProduct={isProduct} />
-      ))}
-    </Slider>
-  );
-};
 
 const LandingPage = ({ posts, products }) => {
   const buttonHoverBg = useColorModeValue("blue.600", "blue.300");
@@ -211,9 +89,9 @@ const LandingPage = ({ posts, products }) => {
         {/* Product Catalog Preview */}
         <Box
           bg={useColorModeValue("gray.50", "gray.800")}
-          my={5}
+          my={4}
           p={8}
-          borderBottomWidth="1px"
+          borderBottomWidth="2px"
           borderColor={useColorModeValue("gray.200", "gray.700")}
         >
           <Heading size="lg" mb={2}>
