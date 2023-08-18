@@ -7,91 +7,97 @@ import {
   Image,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ModalQuickView from "../common/ModalQuickView";
 
 const MotionBox = motion(Box);
-
-const handleAddToCart = (product) => {
-  // Add the product to the cart (you'll need to implement this function yourself)
-  addToCart(product);
-
-  // Show a success toast
-  // toast({
-  //   title: "Product added to cart.",
-  //   description: `${product.name} has been added to your cart.`,
-  //   status: "success",
-  //   duration: 9000,
-  //   isClosable: true,
-  // });
-};
 const ItemCard = ({ item, isProduct = true }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { id, name, image, price, rating, description, title, postStart } =
     item;
+  const toast = useToast();
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const handleAddToCart = () => {
+    // Create this addToCart function when connecting the backend
+    // addToCart(item);
+    console.log(item);
+    toast({
+      title: "Product added to cart.",
+      description: `${name} - ${price} has been added to your cart.`,
+      status: "info",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+  const handleQuickView = () => {
+    setSelectedProduct(item);
+    onOpen();
+  };
+  const handleOpenProductPage = () => {
+    navigate(`/shop/product/${item.id}`);
+  };
   return (
     <MotionBox
+      onClick={handleOpenProductPage}
       key={id}
-      bg="white"
-      rounded="lg"
-      overflow="hidden"
-      boxShadow="lg"
+      bg='white'
+      rounded='lg'
+      overflow='hidden'
+      boxShadow='lg'
       marginX={4}
       whileHover={{ scale: 1.08 }}
       transition={{ duration: 0.3 }}
-      width="280px" // Adjusted width for App Store style cards
-      height="400px" // Adjusted height for App Store style cards
+      width='280px'
+      height='400px'
     >
       <Image
         src={image}
         alt={name}
-        height="180px"
-        objectFit="cover"
-        width="100%"
+        height='180px'
+        objectFit='cover'
+        width='100%'
       />
       <Box p={4} flex={1}>
         {isProduct ? (
           <>
-            <Text fontWeight="bold" fontSize="xl" mt={2} isTruncated>
+            <Text fontWeight='bold' fontSize='xl' mt={2} isTruncated>
               {name}
             </Text>
-            <Text fontSize="sm" color="gray.500" mt={2} noOfLines={2}>
+            <Text fontSize='sm' color='gray.500' mt={2} noOfLines={2}>
               {description}
             </Text>
-            <Text fontSize="lg" fontWeight="semibold" mt={2}>
+            <Text fontSize='lg' fontWeight='semibold' mt={2}>
               {price} $
             </Text>
-            <HStack alignItems="center" mt={2}>
-              <Text fontSize="sm" color="gray.500">
+            <HStack alignItems='center' mt={2}>
+              <Text fontSize='sm' color='gray.500'>
                 Rating:
               </Text>
-              <Box as="span" color="yellow.500">
+              <Box as='span' color='yellow.500'>
                 {Array.from({ length: rating }).map((_, index) => (
                   <StarIcon key={index} boxSize={4} />
                 ))}
               </Box>
             </HStack>
-            <Flex mt={2} justifyContent="space-between">
+            <Flex mt={2} justifyContent='space-between'>
               <Button
-                size="sm"
-                colorScheme="teal"
-                onClick={() => handleAddToCart(product)}
-                width="48%"
+                size='sm'
+                colorScheme='teal'
+                onClick={handleAddToCart}
+                width='48%'
               >
                 Add to Cart
               </Button>
               <Button
-                size="sm"
-                colorScheme="gray"
-                onClick={() => {
-                  setSelectedProduct(item);
-                  onOpen();
-                }}
-                width="48%"
+                size='sm'
+                colorScheme='gray'
+                onClick={handleQuickView}
+                width='48%'
               >
                 Quick View
               </Button>
@@ -99,10 +105,10 @@ const ItemCard = ({ item, isProduct = true }) => {
           </>
         ) : (
           <>
-            <Text fontWeight="bold" fontSize="xl" isTruncated mt={-4}>
+            <Text fontWeight='bold' fontSize='xl' isTruncated mt={-4}>
               {title}
             </Text>
-            <Text fontSize="sm" color="gray.500" noOfLines={4} py={2}>
+            <Text fontSize='sm' color='gray.500' noOfLines={4} py={2}>
               {postStart}
             </Text>
             <Link to={`/post/${id}`}>Read More</Link>

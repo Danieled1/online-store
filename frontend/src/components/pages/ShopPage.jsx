@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -36,17 +36,12 @@ import {
 } from "@chakra-ui/react";
 import Layout from "../layouts/Layout";
 import { useResponsiveContext } from "../../contexts/ResponsiveContext";
-import { motion } from "framer-motion";
 import { SearchIcon } from "@chakra-ui/icons";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { BiCheckboxChecked, BiCheckbox } from "react-icons/bi";
 import ItemCard from "../partials/ItemCard";
-import ModalQuickView from "../common/ModalQuickView";
 import ResponsiveContainer from "../common/ResponsiveContainer";
+import { Outlet } from "react-router-dom";
 
-const MotionBox = motion(Box);
-
-// Product sorting function
 const sortProducts = (products, sortOrder) => {
   if (sortOrder === "price-asc") {
     return [...products].sort((a, b) => a.price - b.price);
@@ -56,47 +51,37 @@ const sortProducts = (products, sortOrder) => {
   }
   return products;
 };
-
+// Create a state for products that fetched from the backend and update it after a search
 const ShopPage = ({ products }) => {
+  const [productsData, setProductsData] = useState([...products]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isMobile } = useResponsiveContext();
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  const { isMobile } = useResponsiveContext();
 
   const [sortOrder, setSortOrder] = useState("price-asc");
   const [selectedCompany, setSelectedCompany] = useState(""); // Placeholder for selected company
   const [priceRange, setPriceRange] = useState([20, 80]);
   const [rating, setRating] = useState(3);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
 
-  const sortedProducts = sortProducts(products, sortOrder);
-  const filteredProducts =
-    searchTerm.length >= 3
-      ? sortedProducts.filter((product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : sortedProducts;
+  useEffect(() => {
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setProductsData(filteredProducts); // Update the state with filtered products
+  }, [searchTerm]);
 
-  const handleAddToCart = (product) => {
-    // Add the product to the cart (you'll need to implement this function yourself)
-    addToCart(product);
-
-    // Show a success toast
-    // toast({
-    //   title: "Product added to cart.",
-    //   description: `${product.name} has been added to your cart.`,
-    //   status: "success",
-    //   duration: 9000,
-    //   isClosable: true,
-    // });
+  const handleSearch = (event) => {
+    const input = event.target.value;
+    console.log(input);
+    setSearchTerm(input);
   };
-
+  const handleSelectProduct = (product) => {
+    setSelectedProduct(product);
+  };
   return (
     <Layout isMobile={isMobile}>
       <ResponsiveContainer>
@@ -118,15 +103,15 @@ const ShopPage = ({ products }) => {
                     <AccordionButton
                       onClick={() => setFiltersOpen(!filtersOpen)}
                     >
-                      <Box flex="1" textAlign="left">
+                      <Box flex='1' textAlign='left'>
                         Filters
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>
                   </h2>
                   <AccordionPanel pb={4}>
-                    <CheckboxGroup colorScheme="green">
-                      <VStack align="start">
+                    <CheckboxGroup colorScheme='green'>
+                      <VStack align='start'>
                         <Checkbox>Option 1</Checkbox>
                         <Checkbox>Option 2</Checkbox>
                         <Checkbox>Option 3</Checkbox>
@@ -139,15 +124,15 @@ const ShopPage = ({ products }) => {
                     <AccordionButton
                       onClick={() => setCategoriesOpen(!categoriesOpen)}
                     >
-                      <Box flex="1" textAlign="left">
+                      <Box flex='1' textAlign='left'>
                         Categories
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>
                   </h2>
                   <AccordionPanel pb={4}>
-                    <CheckboxGroup colorScheme="green">
-                      <VStack align="start">
+                    <CheckboxGroup colorScheme='green'>
+                      <VStack align='start'>
                         <Checkbox>Category 1</Checkbox>
                         <Checkbox>Category 2</Checkbox>
                         <Checkbox>Category 3</Checkbox>
@@ -159,7 +144,7 @@ const ShopPage = ({ products }) => {
                   <AccordionItem>
                     <h2>
                       <AccordionButton>
-                        <Box flex="1" textAlign="left">
+                        <Box flex='1' textAlign='left'>
                           More Filters
                         </Box>
                         <AccordionIcon />
@@ -169,7 +154,7 @@ const ShopPage = ({ products }) => {
                       <Stack spacing={4}>
                         {/* Price Range Filter */}
                         <Box>
-                          <Text mb="2">Price Range:</Text>
+                          <Text mb='2'>Price Range:</Text>
                           <Slider
                             defaultValue={[20, 80]}
                             min={0}
@@ -179,14 +164,14 @@ const ShopPage = ({ products }) => {
                               console.log(values);
                             }}
                           >
-                            <SliderTrack bg="red.100">
-                              <SliderFilledTrack bg="tomato" />
+                            <SliderTrack bg='red.100'>
+                              <SliderFilledTrack bg='tomato' />
                             </SliderTrack>
                             <SliderThumb>
                               <Box
-                                position="absolute"
-                                top="-8px"
-                                color="tomato"
+                                position='absolute'
+                                top='-8px'
+                                color='tomato'
                               >
                                 {/* Displaying the slider's start value */}
                                 Value 1
@@ -194,9 +179,9 @@ const ShopPage = ({ products }) => {
                             </SliderThumb>
                             <SliderThumb>
                               <Box
-                                position="absolute"
-                                top="-8px"
-                                color="tomato"
+                                position='absolute'
+                                top='-8px'
+                                color='tomato'
                               >
                                 {/* Displaying the slider's end value */}
                                 Value 2
@@ -207,18 +192,18 @@ const ShopPage = ({ products }) => {
 
                         {/* Filter by Company */}
                         <Box>
-                          <Text mb="2">By Company:</Text>
-                          <Select placeholder="Select company">
+                          <Text mb='2'>By Company:</Text>
+                          <Select placeholder='Select company'>
                             {/* You'll replace this with dynamic data fetching */}
-                            <option value="company1">Company 1</option>
-                            <option value="company2">Company 2</option>
-                            <option value="company3">Company 3</option>
+                            <option value='company1'>Company 1</option>
+                            <option value='company2'>Company 2</option>
+                            <option value='company3'>Company 3</option>
                           </Select>
                         </Box>
 
                         {/* Filter by Rating */}
                         <Box>
-                          <Text mb="2">Minimum Rating:</Text>
+                          <Text mb='2'>Minimum Rating:</Text>
                           <Slider
                             defaultValue={3}
                             min={1}
@@ -228,14 +213,14 @@ const ShopPage = ({ products }) => {
                               console.log(value);
                             }}
                           >
-                            <SliderTrack bg="yellow.100">
-                              <SliderFilledTrack bg="yellow.400" />
+                            <SliderTrack bg='yellow.100'>
+                              <SliderFilledTrack bg='yellow.400' />
                             </SliderTrack>
                             <SliderThumb>
                               <Box
-                                position="absolute"
-                                top="-8px"
-                                color="yellow.400"
+                                position='absolute'
+                                top='-8px'
+                                color='yellow.400'
                               >
                                 {/* Displaying the slider value */}
                                 Value
@@ -249,7 +234,7 @@ const ShopPage = ({ products }) => {
                 )}
               </Accordion>
               <Button
-                mt="4"
+                mt='4'
                 onClick={() => setMoreFiltersOpen(!moreFiltersOpen)}
               >
                 {moreFiltersOpen ? "Less Filters" : "More Filters"}
@@ -258,19 +243,19 @@ const ShopPage = ({ products }) => {
             <GridItem colSpan={{ base: 1, sm: 4, md: 3 }}>
               <InputGroup>
                 <InputLeftElement
-                  pointerEvents="none"
-                  children={<SearchIcon color="gray.300" />}
+                  pointerEvents='none'
+                  children={<SearchIcon color='gray.300' />}
                 />
                 <Input
-                  placeholder="Search for a product"
+                  placeholder='Search for a product'
                   value={searchTerm}
-                  onChange={handleSearchChange}
+                  onChange={handleSearch}
                 />
               </InputGroup>
               {/* Cart & Deals Section */}
-              <VStack align="start" spacing={4} mt={6}>
+              <VStack align='start' spacing={4} mt={6}>
                 <Button leftIcon={<AiOutlineShoppingCart />}>Cart</Button>
-                <Box w="100%" h="2px" bg="gray.200" />
+                <Box w='100%' h='2px' bg='gray.200' />
                 {/* <Heading size="md">Deals</Heading>
                 <Button variant="outline" leftIcon={<BiCheckboxChecked />}>
                   Deal 1
@@ -289,14 +274,20 @@ const ShopPage = ({ products }) => {
                 my={4}
                 p={4}
               >
-                {sortedProducts.map((product, index) => (
-                  <ItemCard key={index} item={product} isProduct={true} />
+                {productsData.map((product, index) => (
+                  <ItemCard
+                    key={index}
+                    item={product}
+                    isProduct={true}
+                    onSelectProduct={handleSelectProduct} // Pass the callback as a prop
+                  />
                 ))}
               </SimpleGrid>
             </GridItem>
           </Grid>
         </Box>
       </ResponsiveContainer>
+      <Outlet />
     </Layout>
   );
 };

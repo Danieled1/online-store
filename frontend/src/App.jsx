@@ -1,9 +1,12 @@
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import LandingPage from "./components/pages/LandingPage";
 import AuthPage from "./components/pages/AuthPage/AuthPage";
 import AboutUs from "./components/pages/AboutUs";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Shop from "./components/pages/ShopPage";
+import ProductPage from "./components/pages/ShopPage/ProductPage";
 import { faker } from "@faker-js/faker";
+
 const productData = (count) => {
   let products = [];
   for (let i = 0; i < count; i++) {
@@ -32,20 +35,20 @@ const postGenerator = (count) => {
 };
 let fakePosts = postGenerator(15);
 let fakeProducts = productData(15);
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<LandingPage posts={fakePosts} products={fakeProducts} />}
-        />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/shop" element={<Shop products={fakeProducts} />} />
-        {/* ... other routes */}
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={<LandingPage posts={fakePosts} products={fakeProducts} />}
+      />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/shop" element={<Shop products={fakeProducts} />} />
+      <Route path="/shop/product/:productId" element={<ProductPage products={fakeProducts}/>} />
+      {/* ... other routes */}
+    </Routes>
   );
 }
 
