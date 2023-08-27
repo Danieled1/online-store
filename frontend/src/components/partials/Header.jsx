@@ -11,7 +11,7 @@ const Header = ({ isMobile }) => {
       alignItems="center"
       position="sticky"
       top={0}
-      zIndex={1}
+      zIndex={2}
     >
       <Heading
         size="2xl"

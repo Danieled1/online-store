@@ -1,0 +1,5 @@
+export { default as Blog} from "./Blog" 
+export { default as Hero} from "./Hero" 
+export { default as ProductPreview} from "./ProductPreview" 
+export { default as Support} from "./Support" 
+export { default as About} from "./About" 

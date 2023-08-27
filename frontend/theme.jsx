@@ -1,11 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
-const breakpoints = {
-  sm: "320px",
-  md: "481px",
-  lg: "769px",
-  xl: "1025px",
-  "2xl": "1441px",
-};
+
 const theme = extendTheme({
   colors: {
     brand: {
@@ -65,7 +59,13 @@ const theme = extendTheme({
       },
     },
   },
-  breakpoints,
+  breakpoints: {
+    sm: "320px", // Mobile phones (average iPhone screen size)
+    md: "768px", // Tablets (common tablet screen size)
+    lg: "1024px", // Larger tablets and small laptops (common laptop screen size)
+    xl: "1280px", // Larger laptops
+    "2xl": "1440px", // Extra large screens (desktops)
+  },
 });
 
 export default theme;

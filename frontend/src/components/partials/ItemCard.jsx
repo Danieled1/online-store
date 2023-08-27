@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ModalQuickView from "../common/ModalQuickView";
 
 const MotionBox = motion(Box);
-const ItemCard = ({ item, isProduct = true }) => {
+const ItemCard = ({ item, isProduct = true, isPost = false }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { id, name, image, price, rating, description, title, postStart } =
@@ -38,12 +38,14 @@ const ItemCard = ({ item, isProduct = true }) => {
     setSelectedProduct(item);
     onOpen();
   };
-  const handleOpenProductPage = () => {
-    navigate(`/shop/product/${item.id}`);
+
+  const handleOpenSpecificPage = () => {
+    navigate(isProduct ? `/shop/product/${id}` : `/post/${id}`);
   };
+
   return (
     <MotionBox
-      onClick={handleOpenProductPage}
+      onClick={isProduct ? handleOpenSpecificPage : null}
       key={id}
       bg='white'
       rounded='lg'
@@ -52,13 +54,13 @@ const ItemCard = ({ item, isProduct = true }) => {
       marginX={4}
       whileHover={{ scale: 1.08 }}
       transition={{ duration: 0.3 }}
-      width='280px'
-      height='400px'
+      width={isProduct ? "280px" : "250px"} // Adjust card width
+      height={isProduct ? "400px" : "auto"} // Adjust card height
     >
       <Image
         src={image}
         alt={name}
-        height='180px'
+        height={isProduct ? "180px" : "120px"} // Adjust image height
         objectFit='cover'
         width='100%'
       />
@@ -108,7 +110,7 @@ const ItemCard = ({ item, isProduct = true }) => {
             <Text fontWeight='bold' fontSize='xl' isTruncated mt={-4}>
               {title}
             </Text>
-            <Text fontSize='sm' color='gray.500' noOfLines={4} py={2}>
+            <Text fontSize='sm' color='gray.500' noOfLines={3} py={2}>
               {postStart}
             </Text>
             <Link to={`/post/${id}`}>Read More</Link>

@@ -34,13 +34,13 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import Layout from "../layouts/Layout";
-import { useResponsiveContext } from "../../contexts/ResponsiveContext";
+import Layout from "../../layouts/Layout";
+import { useResponsiveContext } from "../../../contexts/ResponsiveContext";
 import { SearchIcon } from "@chakra-ui/icons";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import ItemCard from "../partials/ItemCard";
-import ResponsiveContainer from "../common/ResponsiveContainer";
-import { Outlet } from "react-router-dom";
+import ItemCard from "../../partials/ItemCard";
+import ResponsiveContainer from "../../common/ResponsiveContainer";
+import { Outlet,  } from "react-router-dom";
 
 const sortProducts = (products, sortOrder) => {
   if (sortOrder === "price-asc") {
