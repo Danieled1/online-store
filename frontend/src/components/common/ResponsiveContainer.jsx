@@ -1,4 +1,5 @@
 import { Box, useBreakpointValue } from "@chakra-ui/react";
+import React from "react";
 
 const ResponsiveContainer = ({ children }) => {
   const padding = useBreakpointValue({

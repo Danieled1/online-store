@@ -9,7 +9,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import ModalQuickView from "../common/ModalQuickView";
@@ -18,8 +18,6 @@ const MotionBox = motion(Box);
 const ItemCard = ({ item, isProduct = true, isPost = false }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { id, name, image, price, rating, description, title, postStart } =
-    item;
   const toast = useToast();
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const handleAddToCart = () => {
@@ -28,7 +26,7 @@ const ItemCard = ({ item, isProduct = true, isPost = false }) => {
     console.log(item);
     toast({
       title: "Product added to cart.",
-      description: `${name} - ${price} has been added to your cart.`,
+      description: `${item.product_name} - ${item.product_price} has been added to your cart.`,
       status: "info",
       duration: 3000,
       isClosable: true,
@@ -40,13 +38,13 @@ const ItemCard = ({ item, isProduct = true, isPost = false }) => {
   };
 
   const handleOpenSpecificPage = () => {
-    navigate(isProduct ? `/shop/product/${id}` : `/post/${id}`);
+    navigate(isProduct ? `/shop/product/${item._id}` : `/post/${item._id}`);
   };
 
   return (
     <MotionBox
       onClick={isProduct ? handleOpenSpecificPage : null}
-      key={id}
+      key={item._id}
       bg='white'
       rounded='lg'
       overflow='hidden'
@@ -55,11 +53,11 @@ const ItemCard = ({ item, isProduct = true, isPost = false }) => {
       whileHover={{ scale: 1.08 }}
       transition={{ duration: 0.3 }}
       width={isProduct ? "280px" : "250px"} // Adjust card width
-      height={isProduct ? "400px" : "auto"} // Adjust card height
+      height={isProduct ? "400px" : "250px"} // Adjust card height
     >
       <Image
-        src={image}
-        alt={name}
+        src={isProduct ? item.product_image : item.post_image}
+        alt={isProduct ? item.product_name : item.post_name}
         height={isProduct ? "180px" : "120px"} // Adjust image height
         objectFit='cover'
         width='100%'
@@ -68,20 +66,20 @@ const ItemCard = ({ item, isProduct = true, isPost = false }) => {
         {isProduct ? (
           <>
             <Text fontWeight='bold' fontSize='xl' mt={2} isTruncated>
-              {name}
+              {item.product_name}
             </Text>
             <Text fontSize='sm' color='gray.500' mt={2} noOfLines={2}>
-              {description}
+              {item.product_description}
             </Text>
             <Text fontSize='lg' fontWeight='semibold' mt={2}>
-              {price} $
+              {item.product_price} $
             </Text>
             <HStack alignItems='center' mt={2}>
               <Text fontSize='sm' color='gray.500'>
                 Rating:
               </Text>
               <Box as='span' color='yellow.500'>
-                {Array.from({ length: rating }).map((_, index) => (
+                {Array.from({ length: item.rating }).map((_, index) => (
                   <StarIcon key={index} boxSize={4} />
                 ))}
               </Box>
@@ -108,12 +106,12 @@ const ItemCard = ({ item, isProduct = true, isPost = false }) => {
         ) : (
           <>
             <Text fontWeight='bold' fontSize='xl' isTruncated mt={-4}>
-              {title}
+              {item.post_name}
             </Text>
             <Text fontSize='sm' color='gray.500' noOfLines={3} py={2}>
-              {postStart}
+              {item.post_description}
             </Text>
-            <Link to={`/post/${id}`}>Read More</Link>
+            <Link to={`/post/${item._id}`}>Read More</Link>
           </>
         )}
       </Box>

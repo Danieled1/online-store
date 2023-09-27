@@ -18,6 +18,7 @@ import {
   FaHeadset,
   FaSignInAlt,
 } from "react-icons/fa";
+import React from "react";
 
 const navigationItems = [
   { icon: FaHome, label: "Home", to: "/" },

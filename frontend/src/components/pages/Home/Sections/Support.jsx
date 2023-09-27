@@ -7,6 +7,7 @@ import ButtonAction from "../../../common/Button/ButtonAction";
 import ButtonIcon from "../../../common/Button/ButtonIcon";
 import { Box } from "@chakra-ui/react";
 import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import React from "react";
 const Support = () => {
   return (
     <SectionBox>

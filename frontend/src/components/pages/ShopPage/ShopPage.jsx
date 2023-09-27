@@ -40,21 +40,35 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import ItemCard from "../../partials/ItemCard";
 import ResponsiveContainer from "../../common/ResponsiveContainer";
-import { Outlet,  } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Head3 from "../../common/Heading/Head3";
+import Head2 from "../../common/Heading/Head2";
+import useFetch from "../../../hooks/useFetch";
 
-const sortProducts = (products, sortOrder) => {
-  if (sortOrder === "price-asc") {
-    return [...products].sort((a, b) => a.price - b.price);
-  }
-  if (sortOrder === "price-desc") {
-    return [...products].sort((a, b) => b.price - a.price);
-  }
-  return products;
-};
+// const sortProducts = (products, sortOrder) => {
+//   if (sortOrder === "price-asc") {
+//     return [...products].sort((a, b) => a.price - b.price);
+//   }
+//   if (sortOrder === "price-desc") {
+//     return [...products].sort((a, b) => b.price - a.price);
+//   }
+//   return products;
+// };
 // Create a state for products that fetched from the backend and update it after a search
-const ShopPage = ({ products }) => {
-  const [productsData, setProductsData] = useState([...products]);
+const ShopPage = () => {
+  const baseURL = import.meta.env.VITE_APP_BASE_URL || "http://localhost:3000";
+
+  const productsEndpoint = `${baseURL}/api/products/`;
+  const [products, isLoadingProducts, productsError] = useFetch(
+    productsEndpoint,
+    "GET"
+  );
+  const [fetchedProducts, setFetchedProducts] = useState(products);
+
+  console.log("Rendering ShopPage component"); // Add this line
   const [searchTerm, setSearchTerm] = useState("");
+
+  // const [productsData, setProductsData] = useState([...products]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
@@ -66,22 +80,25 @@ const ShopPage = ({ products }) => {
   const [selectedCompany, setSelectedCompany] = useState(""); // Placeholder for selected company
   const [priceRange, setPriceRange] = useState([20, 80]);
   const [rating, setRating] = useState(3);
-
-  useEffect(() => {
-    const filteredProducts = products.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setProductsData(filteredProducts); // Update the state with filtered products
-  }, [searchTerm]);
-
   const handleSearch = (event) => {
     const input = event.target.value;
-    console.log(input);
     setSearchTerm(input);
   };
   const handleSelectProduct = (product) => {
     setSelectedProduct(product);
   };
+
+  useEffect(() => {
+    
+    console.log("SEARCHED PRODUCTS", products);
+    console.log("FETCHED PRODUCTS", fetchedProducts);
+    const filteredProducts = products?.filter((product) =>
+      product.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    console.log("FILTERED PRODUCTS", filteredProducts);
+    setFetchedProducts(filteredProducts);
+  }, [searchTerm,products]);
+
   return (
     <Layout isMobile={isMobile}>
       <ResponsiveContainer>
@@ -274,14 +291,22 @@ const ShopPage = ({ products }) => {
                 my={4}
                 p={4}
               >
-                {productsData.map((product, index) => (
-                  <ItemCard
-                    key={index}
-                    item={product}
-                    isProduct={true}
-                    onSelectProduct={handleSelectProduct} // Pass the callback as a prop
-                  />
-                ))}
+                {productsError && (
+                  <Head3>Error loading products: {productsError.message}</Head3>
+                )}
+                {isLoadingProducts ? (
+                  <Head2>Loading ...</Head2>
+                ) : (
+                  fetchedProducts &&
+                  fetchedProducts.map((product, index) => (
+                    <ItemCard
+                      key={index}
+                      item={product}
+                      isProduct={true}
+                      onSelectProduct={handleSelectProduct}
+                    />
+                  ))
+                )}
               </SimpleGrid>
             </GridItem>
           </Grid>

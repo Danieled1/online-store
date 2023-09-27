@@ -1,6 +1,7 @@
 import { Flex, Heading } from "@chakra-ui/react";
 import NavigationMenu from "../partials/NavigationMenu";
 import { Link } from "react-router-dom";
+import React from "react";
 
 const Header = ({ isMobile }) => {
   return (

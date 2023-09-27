@@ -4,6 +4,7 @@ import Head3 from "../../../common/Heading/Head3";
 import SubHead from "../../../common/Heading/SubHead";
 import ButtonSection from "../../../common/Button/ButtonSection";
 import { Box } from "@chakra-ui/react";
+import React from "react";
 
 const About = () => {
   return (

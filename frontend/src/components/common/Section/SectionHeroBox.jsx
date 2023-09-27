@@ -1,11 +1,11 @@
 import { Box, VStack, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 
-const HeroSection = ({ children, backgroundImage }) => {
+const HeroSection = ({ children, backgroundImage, height }) => {
   return (
     <Box
       w='full'
-      h={{ sm: "70vh", md: "50vh", xl: "60vh" }}
+      h={height ? height : { sm: "70vh", md: "50vh", xl: "60vh" }}
       position='relative'
       mt={{ base: 4, sm: 6, md: 8, xl: 10 }}
       px={{ base: 4, sm: 6, md: 8, xl: 10 }}
@@ -38,7 +38,7 @@ const HeroSection = ({ children, backgroundImage }) => {
         h='full'
         justifyContent='center'
         px={{ base: 4, sm: 6, md: 8, xl: 12 }} // Adjust padding based on breakpoints
-        spacing={10}
+        spacing={height ? "0" : "10" }
         align='start'
         cursor={"default"}
       >

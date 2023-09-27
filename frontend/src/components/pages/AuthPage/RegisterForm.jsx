@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -27,7 +27,7 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string().min(6, "Password is too short").required("Required"),
-  passwordConfirm: Yup.string()
+  password_confirm: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Required"),
   phone: Yup.string().required("Required"),
@@ -61,13 +61,19 @@ const RegisterForm = ({ isRegistering, toggleForm }) => {
                 name: "",
                 email: "",
                 password: "",
-                passwordConfirm: "",
+                password_confirm: "",
                 phone: "",
               }}
               validationSchema={validationSchema}
               onSubmit={(values, { setSubmitting }) => {
+                const prefixedValues = {};
+                for (const key in values) {
+                  if (values.hasOwnProperty(key)) {
+                    prefixedValues[`user_${key}`] = values[key];
+                  }
+                }
                 setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
+                  alert(JSON.stringify(prefixedValues, null, 2));
                   setSubmitting(false);
                 }, 400);
               }}
@@ -136,25 +142,25 @@ const RegisterForm = ({ isRegistering, toggleForm }) => {
                         </FormControl>
                       )}
                     </Field>
-                    <Field name="passwordConfirm">
+                    <Field name="password_confirm">
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
-                            form.errors.passwordConfirm &&
-                            form.touched.passwordConfirm
+                            form.errors.password_confirm &&
+                            form.touched.password_confirm
                           }
                         >
-                          <FormLabel htmlFor="passwordConfirm">
+                          <FormLabel htmlFor="password_confirm">
                             Confirm Password
                           </FormLabel>
                           <Input
                             {...field}
-                            id="passwordConfirm"
+                            id="password_confirm"
                             type="password"
                             placeholder="Confirm your password"
                           />
                           <ErrorMessage
-                            name="passwordConfirm"
+                            name="password_confirm"
                             component="div"
                           />
                         </FormControl>

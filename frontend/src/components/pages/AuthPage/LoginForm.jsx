@@ -23,18 +23,38 @@ import ToggleAuth from "./ToggleAuth";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useAuth } from "../../../contexts/AuthContext"; // Import the useAuth hook
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Required"),
+  user_email: Yup.string().email("Invalid email").required("Required"),
+  user_password: Yup.string().required("Required"),
 });
 
 const LoginForm = ({ isRegistering, toggleForm }) => {
   const buttonHoverBg = useColorModeValue("brand.secondary", "brand.secondary");
   const { isMobile } = useResponsiveContext();
+  const auth = useAuth(); // Use the useAuth hook to access authentication functions
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClick = () => setShowPassword(!showPassword);
+
+  const handleLogin = async (values, { setSubmitting }) => {
+    try {
+      console.log(values);
+  
+      await auth.login(values.user_email, values.user_password);
+      navigate(-1);
+      
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Layout isMobile={isMobile}>
@@ -82,47 +102,42 @@ const LoginForm = ({ isRegistering, toggleForm }) => {
             </Button>
             <Formik
               initialValues={{
-                email: "",
-                password: "",
+                user_email: "",
+                user_password: "",
               }}
               validationSchema={validationSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 400);
-              }}
+              onSubmit={handleLogin}
             >
               {({ isSubmitting }) => (
                 <Form>
                   <VStack spacing={4}>
-                    <Field name="email">
+                    <Field name="user_email">
                       {({ field, form }) => (
                         <FormControl
-                          isInvalid={form.errors.email && form.touched.email}
+                          isInvalid={form.errors.user_email && form.touched.user_email}
                         >
-                          <FormLabel htmlFor="email">Email address</FormLabel>
+                          <FormLabel htmlFor="user_email">Email address</FormLabel>
                           <Input
                             {...field}
-                            id="email"
+                            id="user_email"
                             placeholder="Your email"
                           />
-                          <ErrorMessage name="email" component="div" />
+                          <ErrorMessage name="user_email" component="div" />
                         </FormControl>
                       )}
                     </Field>
-                    <Field name="password">
+                    <Field name="user_password">
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
-                            form.errors.password && form.touched.password
+                            form.errors.user_password && form.touched.user_password
                           }
                         >
-                          <FormLabel htmlFor="password">Password</FormLabel>
+                          <FormLabel htmlFor="user_password">Password</FormLabel>
                           <InputGroup size="md">
                             <Input
                               {...field}
-                              id="password"
+                              id="user_password"
                               type={showPassword ? "text" : "password"}
                               placeholder="Your password"
                             />
@@ -142,7 +157,7 @@ const LoginForm = ({ isRegistering, toggleForm }) => {
                               />
                             </InputRightElement>
                           </InputGroup>
-                          <ErrorMessage name="password" component="div" />
+                          <ErrorMessage name="user_password" component="div" />
                         </FormControl>
                       )}
                     </Field>
@@ -177,4 +192,5 @@ const LoginForm = ({ isRegistering, toggleForm }) => {
     </Layout>
   );
 };
+
 export default LoginForm;
